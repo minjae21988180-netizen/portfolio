@@ -293,26 +293,29 @@ export default function ControlCenter() {
 
         .cc-character {
           position: absolute;
-          bottom: 6%;
+          bottom: 4%;
           left: 50%;
-          height: 52%;
+          height: 56%;
           width: auto;
-          aspect-ratio: 1 / 2;
+          aspect-ratio: 529 / 1462;
           transform: translateX(-50%);
           transition: filter 0.3s ease;
           z-index: 6;
           pointer-events: none;
+          filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.35));
         }
-        .cc-character svg {
+        .cc-character :global(img) {
           height: 100%;
           width: auto;
           display: block;
+          user-select: none;
+          -webkit-user-drag: none;
         }
 
         @media (max-width: 833px) {
           .cc-character {
             height: 38%;
-            bottom: 28%;
+            bottom: 26%;
           }
         }
 

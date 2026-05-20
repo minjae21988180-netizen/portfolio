@@ -50,16 +50,18 @@ export default function IslandHero({
           gap: 18px;
         }
         .island-hero-art {
-          width: min(720px, 90vw);
-          aspect-ratio: 1 / 1;
+          width: min(960px, 92vw);
+          aspect-ratio: 16 / 9;
           margin-top: 24px;
-        }
-        .island-hero-art :global(svg) {
-          width: 100%;
-          height: 100%;
-          display: block;
+          position: relative;
           border-radius: var(--r-lg);
           overflow: hidden;
+        }
+        .island-hero-art :global(img) {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
         }
       `}</style>
     </section>
