@@ -187,7 +187,7 @@ export default function ControlCenter() {
       {/* Fly-through transition overlay */}
       <div ref={transitionRef} className="cc-transition" aria-hidden />
 
-      <style>{`
+      <style jsx global>{`
         .cc-shell {
           position: relative;
           width: 100%;

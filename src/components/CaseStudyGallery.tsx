@@ -97,7 +97,7 @@ export default function CaseStudyGallery({ onClose }: { onClose: () => void }) {
         </div>
       )}
 
-      <style>{`
+      <style jsx global>{`
         .cs-card {
           text-align: left;
           background: var(--canvas);

@@ -171,7 +171,7 @@ export default function ControlRoom() {
         />
       </svg>
 
-      <style>{`
+      <style jsx>{`
         .control-room {
           position: absolute;
           inset: 0;
