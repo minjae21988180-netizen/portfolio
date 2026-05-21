@@ -1,115 +1,222 @@
 "use client";
 
+import connectBg from "../../../public/assets/connect-island.png";
+import IslandPage from "@/components/IslandPage";
 import { useState } from "react";
-import GlobalNav from "@/components/GlobalNav";
-import SubNav from "@/components/SubNav";
-import Footer from "@/components/Footer";
-import IslandHero from "@/components/IslandHero";
-import ContactPopup from "@/components/ContactPopup";
-import ConnectIsland from "@/components/art/ConnectIsland";
 
 export default function ConnectPage() {
-  const [open, setOpen] = useState(false);
+  return (
+    <IslandPage
+      background={connectBg}
+      hotspot={{ x: 45, y: 35, label: "Send a signal" }}
+      popupTitle="Contact"
+    >
+      {(close) => <ConnectPopup close={close} />}
+    </IslandPage>
+  );
+}
+
+function ConnectPopup({ close }: { close: () => void }) {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [sent, setSent] = useState(false);
+
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const subject = encodeURIComponent(`Hello from ${name || "the control center"}`);
+    const body = encodeURIComponent(`${message}\n\n— ${name}\n${email}`);
+    window.location.href = `mailto:hello@example.com?subject=${subject}&body=${body}`;
+    setSent(true);
+  };
 
   return (
-    <>
-      <GlobalNav />
-      <SubNav
-        category="Connect Island"
-        links={[
-          { href: "/work", label: "Work" },
-          { href: "/me", label: "Me" },
-          { href: "/", label: "Control Center" },
-        ]}
-        cta={{ href: "#say-hi", label: "Say hi" }}
-      />
+    <div>
+      <div className="t-tagline" style={{ color: "var(--primary)" }}>Connect</div>
+      <h2 className="h-display-lg" style={{ marginTop: 6, marginBottom: 16 }}>
+        Let&rsquo;s sit down and chat.
+      </h2>
+      <p className="t-lead" style={{ color: "var(--ink-muted-80)", maxWidth: 700 }}>
+        Pick a channel, or drop a note in the form. Replies usually within a couple of days.
+      </p>
 
-      <main>
-        <IslandHero
-          eyebrow="Connect Island"
-          title="Tap the lighthouse. Send a signal."
-          lead="Two chairs, one café, infinite Wi-Fi. Drop a message, grab the resume, or follow me on the obvious places."
-          primaryCta={{ label: "Open contact", onClick: () => setOpen(true) }}
-          secondaryCta={{ label: "Back to Control Center", href: "/" }}
-          art={<ConnectIsland />}
-        />
+      <div className="cn-grid">
+        <div className="cn-tiles">
+          <a className="cn-tile" href="https://linkedin.com/in/yourname" target="_blank" rel="noopener">
+            <div className="cn-icon">in</div>
+            <div>
+              <div className="cn-tile-label">LinkedIn</div>
+              <div className="cn-tile-value">/in/yourname</div>
+            </div>
+            <span className="cn-arrow">↗</span>
+          </a>
+          <a className="cn-tile" href="/resume.pdf" download>
+            <div className="cn-icon">PDF</div>
+            <div>
+              <div className="cn-tile-label">Resume</div>
+              <div className="cn-tile-value">One page. Updated quarterly.</div>
+            </div>
+            <span className="cn-arrow">↓</span>
+          </a>
+          <a className="cn-tile" href="mailto:hello@example.com">
+            <div className="cn-icon" aria-hidden>
+              <svg width="18" height="18" viewBox="0 0 18 18">
+                <path d="M2 4h14v10H2z" fill="none" stroke="currentColor" strokeWidth="1.5"/>
+                <path d="M2 5l7 5 7-5" fill="none" stroke="currentColor" strokeWidth="1.5"/>
+              </svg>
+            </div>
+            <div>
+              <div className="cn-tile-label">Email</div>
+              <div className="cn-tile-value">hello@example.com</div>
+            </div>
+            <span className="cn-arrow">→</span>
+          </a>
+          <a className="cn-tile" href="tel:+15555550100">
+            <div className="cn-icon" aria-hidden>
+              <svg width="18" height="18" viewBox="0 0 18 18">
+                <path d="M4 2.5h3l1.5 4-2 1.5a9 9 0 0 0 3.5 3.5l1.5-2 4 1.5v3a1.5 1.5 0 0 1-1.5 1.5C7.5 15.5 2.5 10.5 2.5 4A1.5 1.5 0 0 1 4 2.5z" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+              </svg>
+            </div>
+            <div>
+              <div className="cn-tile-label">Phone</div>
+              <div className="cn-tile-value">+1 (555) 555-0100</div>
+            </div>
+            <span className="cn-arrow">→</span>
+          </a>
+        </div>
 
-        <section id="say-hi" className="tile tile-parchment">
-          <div className="t-tagline" style={{ color: "var(--primary)" }}>Get in touch</div>
-          <h2 className="h-display-lg" style={{ maxWidth: 860 }}>
-            The fastest way is a short, honest note.
-          </h2>
-          <p className="t-lead" style={{ color: "var(--ink-muted-80)", maxWidth: 720 }}>
-            Tell me what you&rsquo;re working on and what would help. I reply within a couple of days,
-            occasionally faster — depends on the espresso.
+        <form className="cn-form" onSubmit={onSubmit}>
+          <label className="cn-field">
+            <span className="cn-field-label">Your name</span>
+            <input type="text" required value={name} onChange={(e) => setName(e.target.value)} placeholder="Jane Doe" />
+          </label>
+          <label className="cn-field">
+            <span className="cn-field-label">Email</span>
+            <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@somewhere.com" />
+          </label>
+          <label className="cn-field">
+            <span className="cn-field-label">Note</span>
+            <textarea required rows={5} value={message} onChange={(e) => setMessage(e.target.value)} placeholder="What are you working on? Or just say hi." />
+          </label>
+          <div className="cn-actions">
+            <button className="btn btn-primary" type="submit">
+              {sent ? "Sent ✓" : "Send message"}
+            </button>
+            <button className="btn btn-secondary" type="button" onClick={close}>
+              Cancel
+            </button>
+          </div>
+          <p className="t-fine" style={{ color: "var(--ink-muted-48)", marginTop: 4 }}>
+            Opens in your default mail app.
           </p>
-          <div className="ctas">
-            <button className="btn btn-primary" onClick={() => setOpen(true)}>Send a message</button>
-            <a className="btn btn-secondary" href="/resume.pdf" download>Download resume</a>
-          </div>
-        </section>
-
-        <section className="tile tile-dark">
-          <div className="t-tagline" style={{ color: "var(--primary-on-dark)" }}>Elsewhere</div>
-          <h2 className="h-display-lg">Five places I actually show up.</h2>
-          <div className="links-row">
-            <a className="link-tile" href="https://linkedin.com" target="_blank" rel="noopener">
-              <span>LinkedIn</span><span className="arrow">↗</span>
-            </a>
-            <a className="link-tile" href="https://github.com" target="_blank" rel="noopener">
-              <span>GitHub</span><span className="arrow">↗</span>
-            </a>
-            <a className="link-tile" href="https://dribbble.com" target="_blank" rel="noopener">
-              <span>Dribbble</span><span className="arrow">↗</span>
-            </a>
-            <a className="link-tile" href="https://twitter.com" target="_blank" rel="noopener">
-              <span>Twitter / X</span><span className="arrow">↗</span>
-            </a>
-            <a className="link-tile" href="mailto:hello@example.com">
-              <span>Email</span><span className="arrow">→</span>
-            </a>
-          </div>
-        </section>
-      </main>
-
-      <Footer />
-
-      {open && <ContactPopup onClose={() => setOpen(false)} />}
+        </form>
+      </div>
 
       <style jsx>{`
-        .links-row {
+        .cn-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-          gap: 14px;
-          max-width: 1100px;
-          width: 100%;
-          margin-top: 20px;
+          grid-template-columns: 1fr 1.1fr;
+          gap: 36px;
+          margin-top: 36px;
+          padding-top: 32px;
+          border-top: 1px solid var(--hairline);
+          align-items: start;
         }
-        .link-tile {
-          display: flex;
+        @media (max-width: 820px) {
+          .cn-grid { grid-template-columns: 1fr; gap: 28px; }
+        }
+
+        .cn-tiles {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 12px;
+        }
+        .cn-tile {
+          display: grid;
+          grid-template-columns: 56px 1fr auto;
           align-items: center;
-          justify-content: space-between;
-          padding: 18px 22px;
-          background: rgba(255, 255, 255, 0.04);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: var(--r-md);
-          color: var(--primary-on-dark);
+          gap: 16px;
+          padding: 16px 20px;
+          background: var(--canvas);
+          border: 1px solid var(--hairline);
+          border-radius: var(--r-lg);
+          color: var(--ink);
+          text-decoration: none;
+          transition: border-color 0.18s, transform 0.18s, background 0.18s;
+        }
+        .cn-tile:hover {
+          border-color: var(--primary);
+          background: rgba(0, 102, 204, 0.04);
+          text-decoration: none;
+        }
+        .cn-tile:active { transform: scale(0.99); }
+        .cn-icon {
+          width: 44px;
+          height: 44px;
+          border-radius: 12px;
+          background: linear-gradient(135deg, rgba(0, 102, 204, 0.12), rgba(0, 102, 204, 0.04));
+          color: var(--primary);
+          display: grid;
+          place-items: center;
+          font-family: var(--font-display);
+          font-size: 13px;
+          font-weight: 700;
+          letter-spacing: 0.5px;
+        }
+        .cn-tile-label {
+          font-family: var(--font-text);
           font-size: 17px;
           font-weight: 600;
           letter-spacing: -0.374px;
-          transition: background 0.2s, border-color 0.2s, transform 0.18s;
+          color: var(--ink);
         }
-        .link-tile:hover {
-          background: rgba(41, 151, 255, 0.08);
-          border-color: rgba(41, 151, 255, 0.3);
-          text-decoration: none;
+        .cn-tile-value {
+          font-size: 13px;
+          letter-spacing: -0.224px;
+          color: var(--ink-muted-80);
+          margin-top: 2px;
         }
-        .link-tile:active { transform: scale(0.98); }
-        .link-tile .arrow {
-          color: var(--primary-on-dark);
-          margin-left: 12px;
+        .cn-arrow {
+          color: var(--primary);
+          font-size: 18px;
         }
+
+        .cn-form {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          background: var(--canvas-parchment);
+          padding: 24px;
+          border-radius: var(--r-lg);
+        }
+        .cn-field { display: flex; flex-direction: column; gap: 6px; }
+        .cn-field-label {
+          font-size: 14px;
+          font-weight: 600;
+          letter-spacing: -0.224px;
+        }
+        .cn-field input,
+        .cn-field textarea {
+          font-family: var(--font-text);
+          font-size: 17px;
+          color: var(--ink);
+          background: var(--canvas);
+          border: 1px solid var(--hairline);
+          border-radius: var(--r-md);
+          padding: 12px 16px;
+          line-height: 1.47;
+          letter-spacing: -0.374px;
+          transition: border-color 0.18s, box-shadow 0.18s;
+          resize: vertical;
+        }
+        .cn-field input:focus,
+        .cn-field textarea:focus {
+          outline: none;
+          border-color: var(--primary);
+          box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.18);
+        }
+        .cn-actions { display: flex; gap: 10px; flex-wrap: wrap; }
       `}</style>
-    </>
+    </div>
   );
 }

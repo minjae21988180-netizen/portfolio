@@ -1,102 +1,113 @@
 "use client";
 
-import { useState } from "react";
-import GlobalNav from "@/components/GlobalNav";
-import SubNav from "@/components/SubNav";
-import Footer from "@/components/Footer";
-import IslandHero from "@/components/IslandHero";
-import AboutPopup from "@/components/AboutPopup";
-import MeIsland from "@/components/art/MeIsland";
+import meBg from "../../../public/assets/me-island.png";
+import IslandPage from "@/components/IslandPage";
 
 export default function MePage() {
-  const [open, setOpen] = useState(false);
-
   return (
-    <>
-      <GlobalNav />
-      <SubNav
-        category="Me Island"
-        links={[
-          { href: "/work", label: "Work" },
-          { href: "/connect", label: "Connect" },
-          { href: "/", label: "Control Center" },
-        ]}
-        cta={{ href: "#about", label: "Read the bio" }}
-      />
-
-      <main>
-        <IslandHero
-          eyebrow="Me Island"
-          title="Tap the statue. Meet the person."
-          lead="EDM mornings, SoulCycle afternoons, golden-hour everything. A designer who treats interfaces the way good baristas treat regulars."
-          primaryCta={{ label: "Read the bio", onClick: () => setOpen(true) }}
-          secondaryCta={{ label: "Back to Control Center", href: "/" }}
-          art={<MeIsland />}
-        />
-
-        <section id="about" className="tile tile-light">
-          <div className="t-tagline" style={{ color: "var(--primary)" }}>The short version</div>
-          <h2 className="h-display-lg" style={{ maxWidth: 880 }}>
-            I design for the moment <em>before</em> a person opens an app.
+    <IslandPage
+      background={meBg}
+      hotspot={{ x: 49, y: 38, label: "Meet the person" }}
+      popupTitle="About"
+    >
+      {() => (
+        <div>
+          <div className="t-tagline" style={{ color: "var(--primary)" }}>Hello</div>
+          <h2 className="h-display-lg" style={{ marginTop: 6, marginBottom: 16 }}>
+            I&rsquo;m a designer based in California.
           </h2>
           <p className="t-lead" style={{ color: "var(--ink-muted-80)", maxWidth: 720 }}>
-            The expectation, the small breath of trust, the &ldquo;okay let&rsquo;s do this.&rdquo; If the UI
-            keeps that breath intact, my job is done.
+            I make interfaces that feel calm, decisive, and a little bit playful &mdash; the kind
+            you don&rsquo;t notice until you need them, and then they&rsquo;re exactly where you
+            left them.
           </p>
-          <button className="btn btn-primary" onClick={() => setOpen(true)}>Full bio &amp; skills</button>
-        </section>
 
-        <section className="tile tile-parchment">
-          <div className="t-tagline" style={{ color: "var(--primary)" }}>Interests</div>
-          <h2 className="h-display-lg" style={{ maxWidth: 880 }}>Sunlight, sound, and movement.</h2>
-          <div className="cards-row">
-            <div className="card">
-              <div className="t-caption-strong" style={{ color: "var(--ink-muted-48)", textTransform: "uppercase", letterSpacing: 0.4 }}>Sound</div>
-              <h3 className="t-body-strong" style={{ marginTop: 4 }}>EDM, Fred Again</h3>
-              <p className="t-body" style={{ color: "var(--ink-muted-80)" }}>
-                The kind of music that you actually feel finishing a thought.
-              </p>
-            </div>
-            <div className="card">
-              <div className="t-caption-strong" style={{ color: "var(--ink-muted-48)", textTransform: "uppercase", letterSpacing: 0.4 }}>Movement</div>
-              <h3 className="t-body-strong" style={{ marginTop: 4 }}>SoulCycle &amp; yoga</h3>
-              <p className="t-body" style={{ color: "var(--ink-muted-80)" }}>
-                Where I do most of my best design thinking. Don&rsquo;t @ me.
-              </p>
-            </div>
-            <div className="card">
-              <div className="t-caption-strong" style={{ color: "var(--ink-muted-48)", textTransform: "uppercase", letterSpacing: 0.4 }}>Light</div>
-              <h3 className="t-body-strong" style={{ marginTop: 4 }}>Sunlight, especially golden hour</h3>
-              <p className="t-body" style={{ color: "var(--ink-muted-80)" }}>
-                If a coffee shop has a window seat, it has me.
-              </p>
-            </div>
+          <div className="me-grid">
+            <Column heading="Skills" items={[
+              "Product design (web, iOS, macOS)",
+              "Interaction & motion",
+              "Design systems",
+              "Brand & visual identity",
+              "Prototyping in code (SwiftUI, React)",
+              "Workshops & facilitation",
+            ]} />
+            <Column heading="Values" items={[
+              "Quiet UI, loud product",
+              "Ship the smallest honest version",
+              "Words first, pixels second",
+              "Respect the reader, the user, and the team",
+            ]} />
+            <Column heading="Outside work" items={[
+              "EDM nights, Fred Again forever",
+              "SoulCycle & long yoga mornings",
+              "Sunlight, the closer the window the better",
+              "Coffee shops with two chairs and a window",
+            ]} />
           </div>
-        </section>
 
-        <section className="tile tile-dark-3">
-          <div className="t-tagline" style={{ color: "var(--primary-on-dark)" }}>Where I am</div>
-          <h2 className="h-display-lg">California-based. Coast-flexible.</h2>
-          <p className="t-lead" style={{ color: "var(--body-muted-on-dark)", maxWidth: 660 }}>
-            Working remote with teams everywhere; occasionally found in person in SF, LA, or Oakland.
-          </p>
-        </section>
-      </main>
+          <div className="me-quote">
+            <span className="t-lead-airy">
+              &ldquo;The best portfolios are not catalogues &mdash; they&rsquo;re invitations.&rdquo;
+            </span>
+          </div>
 
-      <Footer />
+          <style jsx>{`
+            .me-grid {
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+              gap: 36px;
+              margin-top: 40px;
+              padding-top: 32px;
+              border-top: 1px solid var(--hairline);
+            }
+            .me-quote {
+              margin-top: 40px;
+              padding: 32px;
+              background: var(--canvas-parchment);
+              border-radius: var(--r-lg);
+              border-left: 3px solid var(--primary);
+            }
+          `}</style>
+        </div>
+      )}
+    </IslandPage>
+  );
+}
 
-      {open && <AboutPopup onClose={() => setOpen(false)} />}
-
+function Column({ heading, items }: { heading: string; items: string[] }) {
+  return (
+    <div>
+      <h3 className="h-display-md">{heading}</h3>
+      <ul className="col-list">
+        {items.map((i) => <li key={i}>{i}</li>)}
+      </ul>
       <style jsx>{`
-        .cards-row {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-          gap: 22px;
-          width: 100%;
-          max-width: 1100px;
-          margin-top: 16px;
+        .col-list {
+          list-style: none;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          margin-top: 14px;
+        }
+        .col-list :global(li) {
+          font-size: 17px;
+          line-height: 1.47;
+          letter-spacing: -0.374px;
+          color: var(--ink-muted-80);
+          padding-left: 18px;
+          position: relative;
+        }
+        .col-list :global(li)::before {
+          content: "";
+          position: absolute;
+          left: 0;
+          top: 11px;
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          background: var(--primary);
         }
       `}</style>
-    </>
+    </div>
   );
 }
