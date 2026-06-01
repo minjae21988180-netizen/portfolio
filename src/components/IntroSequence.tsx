@@ -71,12 +71,19 @@ export default function IntroSequence({ onDone }: { onDone: () => void }) {
   return (
     <div
       className={`intro ${phase}`}
-      onClick={enter}
+      onClick={(e) => {
+        // don't let the dismiss-click bubble to the scene (it would fly to an island)
+        e.stopPropagation();
+        enter();
+      }}
       role="button"
       tabIndex={0}
       aria-label="Enter the Control Center"
       onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") enter();
+        if (e.key === "Enter" || e.key === " ") {
+          e.stopPropagation();
+          enter();
+        }
       }}
     >
       {/* zoomed-in frame (the live room) — fades/scales in as we dive */}

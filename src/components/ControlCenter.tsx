@@ -128,13 +128,14 @@ export default function ControlCenter() {
   }, [router, transitioning]);
 
   const onSceneClick = useCallback(() => {
+    if (intro !== false) return; // ignore scene clicks during the intro/loading
     if (meoOpen) return;
     if (!activeZone) return;
     const target = ZONES.find((z) => z.key === activeZone);
     if (!target) return;
     const side = activeZone === "work" ? "left" : activeZone === "connect" ? "right" : "center";
     flyThrough(target.href, side);
-  }, [activeZone, flyThrough, meoOpen]);
+  }, [activeZone, flyThrough, meoOpen, intro]);
 
   // Click the character → random dance (placeholder CSS wiggle until WebMs
   // land) + open the ME-ODOMETER popup, both on the same click.
