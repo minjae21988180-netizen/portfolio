@@ -1,113 +1,125 @@
 "use client";
 
+import { useState } from "react";
 import meBg from "../../../public/assets/me-island.png";
 import IslandPage from "@/components/IslandPage";
+import PopupShell from "@/components/PopupShell";
+
+const TABS = ["Bio", "Background", "Interests", "Education", "Skills"];
 
 export default function MePage() {
   return (
     <IslandPage
       background={meBg}
-      hotspot={{ x: 49, y: 38, label: "Meet the person" }}
-      popupTitle="About"
+      hotspot={{ x: 49, y: 38, label: "Meet Minjae" }}
+      popupLabel="About Minjae"
     >
-      {() => (
-        <div>
-          <div className="t-tagline" style={{ color: "var(--primary)" }}>Hello</div>
-          <h2 className="h-display-lg" style={{ marginTop: 6, marginBottom: 16 }}>
-            I&rsquo;m a designer based in California.
-          </h2>
-          <p className="t-lead" style={{ color: "var(--ink-muted-80)", maxWidth: 720 }}>
-            I make interfaces that feel calm, decisive, and a little bit playful &mdash; the kind
-            you don&rsquo;t notice until you need them, and then they&rsquo;re exactly where you
-            left them.
-          </p>
-
-          <div className="me-grid">
-            <Column heading="Skills" items={[
-              "Product design (web, iOS, macOS)",
-              "Interaction & motion",
-              "Design systems",
-              "Brand & visual identity",
-              "Prototyping in code (SwiftUI, React)",
-              "Workshops & facilitation",
-            ]} />
-            <Column heading="Values" items={[
-              "Quiet UI, loud product",
-              "Ship the smallest honest version",
-              "Words first, pixels second",
-              "Respect the reader, the user, and the team",
-            ]} />
-            <Column heading="Outside work" items={[
-              "EDM nights, Fred Again forever",
-              "SoulCycle & long yoga mornings",
-              "Sunlight, the closer the window the better",
-              "Coffee shops with two chairs and a window",
-            ]} />
-          </div>
-
-          <div className="me-quote">
-            <span className="t-lead-airy">
-              &ldquo;The best portfolios are not catalogues &mdash; they&rsquo;re invitations.&rdquo;
-            </span>
-          </div>
-
-          <style jsx>{`
-            .me-grid {
-              display: grid;
-              grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-              gap: 36px;
-              margin-top: 40px;
-              padding-top: 32px;
-              border-top: 1px solid var(--hairline);
-            }
-            .me-quote {
-              margin-top: 40px;
-              padding: 32px;
-              background: var(--canvas-parchment);
-              border-radius: var(--r-lg);
-              border-left: 3px solid var(--primary);
-            }
-          `}</style>
-        </div>
-      )}
+      {(close) => <MePopup close={close} />}
     </IslandPage>
   );
 }
 
-function Column({ heading, items }: { heading: string; items: string[] }) {
+function MePopup({ close }: { close: () => void }) {
+  const [tab, setTab] = useState("Bio");
+
   return (
-    <div>
-      <h3 className="h-display-md">{heading}</h3>
-      <ul className="col-list">
-        {items.map((i) => <li key={i}>{i}</li>)}
-      </ul>
-      <style jsx>{`
-        .col-list {
-          list-style: none;
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-          margin-top: 14px;
-        }
-        .col-list :global(li) {
-          font-size: 17px;
-          line-height: 1.47;
-          letter-spacing: -0.374px;
-          color: var(--ink-muted-80);
-          padding-left: 18px;
-          position: relative;
-        }
-        .col-list :global(li)::before {
-          content: "";
-          position: absolute;
-          left: 0;
-          top: 11px;
-          width: 5px;
-          height: 5px;
-          border-radius: 50%;
-          background: var(--primary);
-        }
-      `}</style>
-    </div>
+    <PopupShell
+      eyebrow="About"
+      title="Minjae Kim"
+      tabs={TABS}
+      activeTab={tab}
+      onTab={setTab}
+      onClose={close}
+    >
+      <div className="prose">{TAB_CONTENT[tab]}</div>
+    </PopupShell>
   );
 }
+
+const TAB_CONTENT: Record<string, JSX.Element> = {
+  Bio: (
+    <>
+      <p className="lead">
+        I&rsquo;m Minjae (Min), a UX/UI and graphic designer who crafts meaningful digital
+        experiences that solve real-world problems.
+      </p>
+      <p>
+        I combine user-centered research with creative problem-solving to design products that are
+        both intuitive and visually engaging. I move between product UX, research, and brand/graphic
+        work — which is exactly why my Work island splits into four prisms.
+      </p>
+      <p>Based in Los Angeles, CA.</p>
+    </>
+  ),
+  Background: (
+    <>
+      <p className="lead">
+        I bring a versatile skill set and deep empathy for users to every project.
+      </p>
+      <p>
+        With experience across healthcare, enterprise software, education, and hospitality branding,
+        I believe great design emerges from understanding people and refining ideas through
+        iteration. From research collaborations at UC San Diego&rsquo;s Billions Lab to multi-brand
+        creative leadership in LA hospitality, I&rsquo;ve learned to hold rigor and empathy at the
+        same time.
+      </p>
+    </>
+  ),
+  Interests: (
+    <>
+      <p className="lead">Outside design — chasing sunlight around Los Angeles.</p>
+      <ul>
+        <li>EDM, with Fred again.. on repeat</li>
+        <li>SoulCycle &amp; long yoga mornings</li>
+        <li>Sunlight — the closer the window, the better</li>
+        <li>Always exploring new tools and discovering hidden gems around LA</li>
+      </ul>
+    </>
+  ),
+  Education: (
+    <>
+      <p className="lead">B.S. Cognitive Science — Design &amp; Interaction</p>
+      <p>
+        University of California, San Diego — minor in Computer Graphic Art. Graduated December
+        2024.
+      </p>
+    </>
+  ),
+  Skills: (
+    <>
+      <p className="lead">Research-led, systems-minded, hands-on in code.</p>
+      <p style={{ marginBottom: 8, fontWeight: 700, color: "var(--ink)" }}>Skills</p>
+      <div className="chips" style={{ marginBottom: 18 }}>
+        {[
+          "User Research",
+          "Interaction Design",
+          "Design Systems",
+          "Usability Testing",
+          "Information Architecture",
+          "Visual Design",
+          "Prototyping",
+          "Wireframing",
+        ].map((s) => (
+          <span className="chip" key={s}>{s}</span>
+        ))}
+      </div>
+      <p style={{ marginBottom: 8, fontWeight: 700, color: "var(--ink)" }}>Tools</p>
+      <div className="chips">
+        {[
+          "Figma",
+          "Adobe Creative Suite",
+          "Sketch",
+          "Principle",
+          "InVision",
+          "Miro",
+          "UserTesting",
+          "Maze",
+          "HTML/CSS",
+          "React",
+        ].map((s) => (
+          <span className="chip" key={s}>{s}</span>
+        ))}
+      </div>
+    </>
+  ),
+};

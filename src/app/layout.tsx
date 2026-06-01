@@ -1,22 +1,37 @@
 import type { Metadata, Viewport } from "next";
 import "@/styles/globals.css";
-import { Inter } from "next/font/google";
+import { Fraunces, Quicksand, Baloo_2 } from "next/font/google";
 import CustomCursor from "@/components/CustomCursor";
 
-const inter = Inter({
+const fraunces = Fraunces({
   subsets: ["latin"],
-  weight: ["300", "400", "600", "700"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
-  variable: "--font-inter",
+  variable: "--font-fraunces",
+});
+
+const quicksand = Quicksand({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-quicksand",
+});
+
+const baloo = Baloo_2({
+  subsets: ["latin"],
+  weight: ["500", "600", "700", "800"],
+  display: "swap",
+  variable: "--font-baloo",
 });
 
 export const metadata: Metadata = {
-  title: "Control Center — A Portfolio",
+  title: "Minjae Kim — Control Center Portfolio",
   description:
-    "An interactive portfolio inspired by Inside Out's Personality Islands. Step into the control center and explore Work, Me, and Connect islands.",
+    "An Inside Out–inspired interactive portfolio by Minjae Kim, UX/Product & Graphic Designer in Los Angeles. Step into the control center and explore the Work, Me, and Connect islands.",
   openGraph: {
-    title: "Control Center — A Portfolio",
-    description: "Step into the control center.",
+    title: "Minjae Kim — Control Center Portfolio",
+    description:
+      "Step into the control center — UX research, product design, and brand work across three personality islands.",
     type: "website",
   },
 };
@@ -24,12 +39,15 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#000000",
+  themeColor: "#c9b6e4",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html
+      lang="en"
+      className={`${fraunces.variable} ${quicksand.variable} ${baloo.variable}`}
+    >
       <body>
         <CustomCursor />
         {children}

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import ControlRoom from "./art/ControlRoom";
 import CharacterBack from "./art/CharacterBack";
+import MeOdometer from "./MeOdometer";
 
 type Zone = "work" | "me" | "connect" | null;
 
@@ -13,17 +14,22 @@ const ZONES: { key: Exclude<Zone, null>; min: number; max: number; href: string;
   { key: "connect", min: 0.695, max: 0.965, href: "/connect", label: "Connect Island", hint: "Contact, socials, resume" },
 ];
 
-const MIN_X = 0.15;
-const MAX_X = 0.85;
+// Character sways subtly around center (not full-width tracking) so the
+// side windows stay clickable. Constants per PROJECT_BRIEF §1.
+const CHAR_TRAVEL = 75; // px, ±
+const CHAR_TILT = 5; // deg, ±
+const LERP = 0.06;
 
 export default function ControlCenter() {
   const sceneRef = useRef<HTMLDivElement>(null);
-  const characterRef = useRef<HTMLDivElement>(null);
+  const characterRef = useRef<HTMLElement>(null);
   const transitionRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const [activeZone, setActiveZone] = useState<Zone>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [transitioning, setTransitioning] = useState(false);
+  const [meoOpen, setMeoOpen] = useState(false);
+  const [dancing, setDancing] = useState(false);
 
   const targetXRef = useRef(0.5);
   const currentXRef = useRef(0.5);
@@ -51,17 +57,20 @@ export default function ControlCenter() {
     if (isMobile) {
       currentXRef.current = 0.5;
       if (characterRef.current) {
-        characterRef.current.style.left = `50%`;
+        characterRef.current.style.transform = `translateX(-50%)`;
       }
       return;
     }
 
     const tick = () => {
       // lerp current → target
-      currentXRef.current += (targetXRef.current - currentXRef.current) * 0.09;
+      currentXRef.current += (targetXRef.current - currentXRef.current) * LERP;
       const x = currentXRef.current;
       if (characterRef.current) {
-        characterRef.current.style.left = `${x * 100}%`;
+        // subtle sway + tilt toward the cursor, character stays centered
+        const offset = (x - 0.5) * 2 * CHAR_TRAVEL;
+        const tilt = (x - 0.5) * 2 * CHAR_TILT;
+        characterRef.current.style.transform = `translateX(calc(-50% + ${offset}px)) rotate(${tilt}deg)`;
       }
       const z = detectZone(x);
       if (z !== activeZoneRef.current) {
@@ -79,8 +88,7 @@ export default function ControlCenter() {
     if (!sceneRef.current) return;
     const rect = sceneRef.current.getBoundingClientRect();
     const rel = (e.clientX - rect.left) / rect.width;
-    const clamped = Math.max(MIN_X, Math.min(MAX_X, rel));
-    targetXRef.current = clamped;
+    targetXRef.current = Math.max(0, Math.min(1, rel));
   }, [isMobile]);
 
   useEffect(() => {
@@ -101,12 +109,22 @@ export default function ControlCenter() {
   }, [router, transitioning]);
 
   const onSceneClick = useCallback(() => {
+    if (meoOpen) return;
     if (!activeZone) return;
     const target = ZONES.find((z) => z.key === activeZone);
     if (!target) return;
     const side = activeZone === "work" ? "left" : activeZone === "connect" ? "right" : "center";
     flyThrough(target.href, side);
-  }, [activeZone, flyThrough]);
+  }, [activeZone, flyThrough, meoOpen]);
+
+  // Click the character → random dance (placeholder CSS wiggle until WebMs
+  // land) + open the ME-ODOMETER popup, both on the same click.
+  const onCharacterClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    setDancing(true);
+    setMeoOpen(true);
+    window.setTimeout(() => setDancing(false), 1400);
+  }, []);
 
   return (
     <div className="cc-shell" ref={sceneRef} onClick={onSceneClick}>
@@ -143,13 +161,16 @@ export default function ControlCenter() {
         );
       })}
 
-      {/* Character sprite */}
-      <div
-        ref={characterRef}
-        className="cc-character scene-shadow"
+      {/* Character sprite — clickable, opens the ME-ODOMETER */}
+      <button
+        ref={characterRef as React.RefObject<HTMLButtonElement>}
+        type="button"
+        className={`cc-character scene-shadow ${dancing ? "dancing" : ""}`}
+        onClick={onCharacterClick}
+        aria-label="Meet Minjae — open the ME-ODOMETER stats"
       >
         <CharacterBack />
-      </div>
+      </button>
 
       {/* Mobile fallback — tappable island cards */}
       {isMobile && (
@@ -173,16 +194,19 @@ export default function ControlCenter() {
 
       {/* Hero copy — Apple-tight, quiet */}
       <div className="cc-hero">
-        <div className="t-tagline" style={{ color: "#F5D76E", marginBottom: 8 }}>Control Center</div>
+        <div className="t-tagline" style={{ color: "#ffe6a0", marginBottom: 8 }}>Minjae Kim · Control Center</div>
         <h1 className="h-hero" style={{ color: "#fff", maxWidth: 720 }}>
           Three islands. One mind. Take the controls.
         </h1>
-        <p className="t-lead" style={{ color: "rgba(255,255,255,0.7)", marginTop: 14, maxWidth: 540 }}>
+        <p className="t-lead" style={{ color: "rgba(255,255,255,0.78)", marginTop: 14, maxWidth: 560 }}>
           {isMobile
-            ? "Tap an island to step inside."
-            : "Move your cursor — she walks toward the window. Click the glowing one to fly through."}
+            ? "Tap an island to step inside — or tap Minjae for her stat card."
+            : "Move your cursor — she turns toward the window. Click a glowing one to fly through, or click Minjae for her ME-ODOMETER."}
         </p>
       </div>
+
+      {/* ME-ODOMETER player-card popup */}
+      {meoOpen && <MeOdometer onClose={() => setMeoOpen(false)} />}
 
       {/* Fly-through transition overlay */}
       <div ref={transitionRef} className="cc-transition" aria-hidden />
@@ -301,7 +325,11 @@ export default function ControlCenter() {
           transform: translateX(-50%);
           transition: filter 0.3s ease;
           z-index: 6;
-          pointer-events: none;
+          pointer-events: auto;
+          cursor: pointer;
+          padding: 0;
+          background: none;
+          border: none;
           filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.35));
         }
         .cc-character :global(img) {
@@ -310,6 +338,24 @@ export default function ControlCenter() {
           display: block;
           user-select: none;
           -webkit-user-drag: none;
+          transform-origin: 50% 100%;
+        }
+        .cc-character:hover :global(img) { animation: cc-wiggle 1.6s ease-in-out infinite; }
+        .cc-character.dancing :global(img) { animation: cc-dance 0.5s ease-in-out 0s 3; }
+        @keyframes cc-wiggle {
+          0%, 100% { transform: rotate(0deg); }
+          25% { transform: rotate(1.5deg); }
+          75% { transform: rotate(-1.5deg); }
+        }
+        @keyframes cc-dance {
+          0%, 100% { transform: translateY(0) rotate(0deg); }
+          20% { transform: translateY(-12px) rotate(-5deg); }
+          50% { transform: translateY(0) rotate(5deg); }
+          80% { transform: translateY(-8px) rotate(-3deg); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .cc-character:hover :global(img),
+          .cc-character.dancing :global(img) { animation: none; }
         }
 
         @media (max-width: 833px) {
