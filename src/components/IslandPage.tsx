@@ -1,9 +1,10 @@
 "use client";
 
 import Image, { StaticImageData } from "next/image";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import BackButton from "./BackButton";
 import Hotspot from "./Hotspot";
+import { useParallax } from "@/hooks/useParallax";
 
 /**
  * Full-bleed island page: the panorama fills the viewport with a single
@@ -24,6 +25,8 @@ export default function IslandPage({
   children: (close: () => void) => ReactNode;
 }) {
   const [open, setOpen] = useState(false);
+  const sceneRef = useRef<HTMLDivElement>(null);
+  useParallax(sceneRef);
 
   useEffect(() => {
     if (!open) return;
@@ -40,21 +43,23 @@ export default function IslandPage({
 
   return (
     <main className="ip-shell" data-popup={open ? "true" : "false"}>
-      <div className="ip-bg" aria-hidden>
+      {/* parallax scene layer — image + hotspot ride together so the
+          hotspot stays glued to the monument as the scene shifts */}
+      <div className="ip-scene" ref={sceneRef}>
         <Image
           src={background}
           alt=""
+          aria-hidden
           placeholder="blur"
           fill
           priority
           sizes="100vw"
           style={{ objectFit: "cover", objectPosition: "center" }}
         />
+        <Hotspot x={hotspot.x} y={hotspot.y} label={hotspot.label} onClick={() => setOpen(true)} />
       </div>
 
       <BackButton />
-
-      <Hotspot x={hotspot.x} y={hotspot.y} label={hotspot.label} onClick={() => setOpen(true)} />
 
       {open && children(() => setOpen(false))}
 
@@ -66,15 +71,14 @@ export default function IslandPage({
           overflow: hidden;
           background: #1d1024;
         }
-        .ip-bg {
+        .ip-scene {
           position: fixed;
           inset: 0;
           z-index: 0;
-          transition: filter 0.45s ease, transform 0.45s ease;
+          transition: filter 0.45s ease;
         }
-        .ip-shell[data-popup="true"] .ip-bg {
+        .ip-shell[data-popup="true"] .ip-scene {
           filter: brightness(0.7) saturate(1) blur(5px);
-          transform: scale(1.04);
         }
       `}</style>
     </main>

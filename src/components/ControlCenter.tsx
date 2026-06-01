@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import ControlRoom from "./art/ControlRoom";
 import CharacterBack from "./art/CharacterBack";
 import MeOdometer from "./MeOdometer";
+import { useParallax } from "@/hooks/useParallax";
 
 type Zone = "work" | "me" | "connect" | null;
 
@@ -22,8 +23,11 @@ const LERP = 0.06;
 
 export default function ControlCenter() {
   const sceneRef = useRef<HTMLDivElement>(null);
+  const bgRef = useRef<HTMLDivElement>(null);
   const characterRef = useRef<HTMLElement>(null);
   const transitionRef = useRef<HTMLDivElement>(null);
+  // background panorama parallax (subtle; character moves more + opposite → depth)
+  useParallax(bgRef, { maxX: 22, maxY: 13, scale: 1.08 });
   const router = useRouter();
   const [activeZone, setActiveZone] = useState<Zone>(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -128,7 +132,9 @@ export default function ControlCenter() {
 
   return (
     <div className="cc-shell" ref={sceneRef} onClick={onSceneClick}>
-      <ControlRoom />
+      <div className="cc-bg" ref={bgRef}>
+        <ControlRoom />
+      </div>
 
       {/* Window glow overlays */}
       <div
@@ -221,6 +227,13 @@ export default function ControlCenter() {
           background: #0F0820;
           color: #fff;
           isolation: isolate;
+        }
+
+        .cc-bg {
+          position: absolute;
+          inset: 0;
+          z-index: 0;
+          will-change: transform;
         }
 
         .cc-hero {
