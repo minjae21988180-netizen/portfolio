@@ -1,222 +1,145 @@
 "use client";
 
+import { useState } from "react";
 import workBg from "../../../public/assets/work-island.png";
 import IslandPage from "@/components/IslandPage";
-import { caseStudies, type CaseStudy } from "@/data/caseStudies";
-import { useState } from "react";
+import PopupShell from "@/components/PopupShell";
+import CaseStudyDetail from "@/components/CaseStudyDetail";
+import { caseStudies, PRISMS, type CaseStudy, type Prism } from "@/data/caseStudies";
+
+const TABS = ["All", ...PRISMS.map((p) => p.label)];
+const LABEL_TO_PRISM: Record<string, Prism> = Object.fromEntries(
+  PRISMS.map((p) => [p.label, p.key])
+);
 
 export default function WorkPage() {
   return (
     <IslandPage
       background={workBg}
-      hotspot={{ x: 50, y: 35, label: "Open the case studies" }}
-      popupTitle="Case studies"
+      hotspot={{ x: 50, y: 35, label: "Open the lightbulb" }}
+      popupLabel="Selected work"
     >
-      {() => <WorkPopupContent />}
+      {(close) => <WorkPopup close={close} />}
     </IslandPage>
   );
 }
 
-function WorkPopupContent() {
+function WorkPopup({ close }: { close: () => void }) {
+  const [tab, setTab] = useState("All");
   const [selected, setSelected] = useState<CaseStudy | null>(null);
 
+  // Case study replaces the grid in-place inside the same popup.
   if (selected) {
     return (
-      <div>
-        <button className="back-link" onClick={() => setSelected(null)}>
-          <span aria-hidden>←</span> All case studies
-        </button>
-        <div className="t-tagline" style={{ color: "var(--primary)", marginTop: 16 }}>
-          {selected.category} · {selected.year}
-        </div>
-        <h2 className="h-display-lg" style={{ marginTop: 6, marginBottom: 16 }}>
-          {selected.title}
-        </h2>
-        <p className="t-lead" style={{ color: "var(--ink-muted-80)", maxWidth: 720 }}>
-          {selected.summary}
-        </p>
-
-        <div className="cs-meta">
-          <Meta label="Role" value={selected.role} />
-          <Meta label="Tools" value={selected.tools.join(", ")} />
-          <Meta label="Year" value={selected.year} />
-        </div>
-
-        <h3 className="h-display-md" style={{ marginTop: 32, marginBottom: 12 }}>Highlights</h3>
-        <ul className="cs-highlights">
-          {selected.highlights.map((h) => (
-            <li key={h}>{h}</li>
-          ))}
-        </ul>
-
-        <div style={{ marginTop: 32, display: "flex", gap: 12, flexWrap: "wrap" }}>
-          <button className="btn btn-primary" onClick={() => setSelected(null)}>
-            Back to gallery
-          </button>
-          <a className="btn btn-secondary" href="mailto:hello@example.com">
-            Ask about this project
-          </a>
-        </div>
-
-        <style jsx>{`
-          .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            color: var(--primary);
-            font-size: 14px;
-            letter-spacing: -0.224px;
-            padding: 0;
-          }
-          .back-link:hover { text-decoration: underline; text-underline-offset: 3px; }
-          .cs-meta {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 20px;
-            margin-top: 28px;
-            padding-top: 24px;
-            border-top: 1px solid var(--hairline);
-          }
-          .cs-highlights {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-          }
-          .cs-highlights :global(li) {
-            padding-left: 22px;
-            position: relative;
-            font-size: 17px;
-            line-height: 1.47;
-            letter-spacing: -0.374px;
-          }
-          .cs-highlights :global(li)::before {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 11px;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--primary);
-          }
-        `}</style>
-      </div>
+      <PopupShell eyebrow="" title={selected.title} onClose={close} flush>
+        <CaseStudyDetail study={selected} onBack={() => setSelected(null)} />
+      </PopupShell>
     );
   }
 
-  return (
-    <div>
-      <div className="t-tagline" style={{ color: "var(--primary)" }}>Case studies</div>
-      <h2 className="h-display-lg" style={{ marginTop: 6, marginBottom: 10 }}>
-        Seven projects, picked for what they taught me.
-      </h2>
-      <p className="t-body" style={{ color: "var(--ink-muted-80)", maxWidth: 700, marginBottom: 32 }}>
-        A mix of shipped work, side projects, and the rare brief that still keeps me up at night.
-      </p>
+  const visible =
+    tab === "All"
+      ? caseStudies
+      : caseStudies.filter((c) => c.prism === LABEL_TO_PRISM[tab]);
 
-      <div className="cs-grid">
-        {caseStudies.map((cs) => (
-          <button key={cs.slug} className="cs-card" onClick={() => setSelected(cs)}>
-            <div className="cs-thumb" data-slug={cs.slug} />
-            <div className="cs-cat">{cs.category} · {cs.year}</div>
-            <div className="cs-title">{cs.title}</div>
-            <div className="cs-summary">{cs.summary}</div>
-            <span className="cs-link">Read case study →</span>
+  const personalActive = tab === "Personal Project";
+
+  return (
+    <PopupShell
+      eyebrow="Selected Work"
+      title="Projects"
+      tabs={TABS}
+      activeTab={tab}
+      onTab={setTab}
+      onClose={close}
+    >
+      <div className="wk-grid">
+        {visible.map((c) => (
+          <button key={c.slug} className="wk-card" onClick={() => setSelected(c)}>
+            <div className={`wk-thumb ${c.tint}`}>{c.title.toUpperCase()}</div>
+            <div className="wk-body">
+              <h4>{c.title}</h4>
+              <div className="wk-teaser">{c.teaser}</div>
+              <div className="wk-chips">
+                {c.tags.slice(0, 3).map((t) => (
+                  <span className="chip" key={t}>{t}</span>
+                ))}
+              </div>
+            </div>
           </button>
         ))}
+        {personalActive && visible.length === 0 && (
+          <div className="wk-soon">
+            <div className="wk-soon-mark">✦</div>
+            <h4>Personal Project</h4>
+            <p>Coming soon — a self-directed project currently in the works.</p>
+          </div>
+        )}
       </div>
 
       <style jsx>{`
-        .cs-grid {
+        .wk-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-          gap: 22px;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 20px;
         }
-        .cs-card {
+        @media (max-width: 680px) {
+          .wk-grid { grid-template-columns: 1fr; }
+        }
+        .wk-card {
           text-align: left;
-          background: var(--canvas);
-          border: 1px solid var(--hairline);
-          border-radius: var(--r-lg);
-          padding: var(--space-lg);
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-          transition: border-color 0.2s, transform 0.18s;
-          cursor: pointer;
-        }
-        .cs-card:hover { border-color: var(--ink-muted-48); }
-        .cs-card:active { transform: scale(0.99); }
-        .cs-thumb {
-          aspect-ratio: 4 / 3;
-          border-radius: var(--r-sm);
-          margin-bottom: 8px;
-          background: linear-gradient(135deg, #f5f5f7, #e8e8ee);
-          position: relative;
+          background: rgba(255, 255, 255, 0.62);
+          border: 2px solid rgba(255, 255, 255, 0.8);
+          border-radius: 22px;
           overflow: hidden;
+          transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.4, 1), box-shadow 0.22s;
         }
-        .cs-thumb::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background: radial-gradient(circle at 30% 30%, rgba(0, 102, 204, 0.12), transparent 60%);
+        .wk-card:hover {
+          transform: translateY(-6px) rotate(-1deg);
+          box-shadow: 0 18px 36px rgba(150, 90, 130, 0.26);
         }
-        .cs-thumb[data-slug="atlas"]::after { content: "ATLAS"; }
-        .cs-thumb[data-slug="ember"]::after { content: "EMBER"; }
-        .cs-thumb[data-slug="sundial"]::after { content: "SUNDIAL"; }
-        .cs-thumb[data-slug="north"]::after { content: "NORTH"; }
-        .cs-thumb[data-slug="verse"]::after { content: "VERSE"; }
-        .cs-thumb[data-slug="loop"]::after { content: "LOOP"; }
-        .cs-thumb[data-slug="echo"]::after { content: "ECHO"; }
-        .cs-thumb::after {
-          position: absolute;
-          inset: 0;
+        .wk-thumb {
+          height: 130px;
           display: grid;
           place-items: center;
           font-family: var(--font-display);
-          font-size: 26px;
-          font-weight: 600;
-          letter-spacing: 0.4em;
-          color: var(--ink-muted-48);
+          font-size: 14px;
+          letter-spacing: 0.1em;
+          color: rgba(90, 70, 90, 0.7);
+          text-align: center;
+          padding: 0 12px;
         }
-        .cs-cat {
-          font-size: 12px;
+        .t-prod { background: linear-gradient(135deg, #cfe3f7, #e3d4f2); }
+        .t-res { background: linear-gradient(135deg, #e3d4f2, #f9c0d6); }
+        .t-web { background: linear-gradient(135deg, #bfe6d4, #cfe3f7); }
+        .t-brand { background: linear-gradient(135deg, #fbe9b0, #f9c0d6); }
+        .wk-body { padding: 15px 17px 19px; }
+        .wk-body h4 {
+          font-family: var(--font-display);
           font-weight: 600;
-          letter-spacing: 0.4px;
-          text-transform: uppercase;
-          color: var(--ink-muted-48);
-        }
-        .cs-title {
-          font-size: 17px;
-          font-weight: 600;
-          letter-spacing: -0.374px;
+          font-size: 19px;
+          margin-bottom: 6px;
           color: var(--ink);
         }
-        .cs-summary {
-          font-size: 15px;
-          line-height: 1.47;
-          color: var(--ink-muted-80);
+        .wk-teaser {
+          font-size: 13px;
+          color: var(--ink-soft);
+          line-height: 1.5;
+          margin-bottom: 11px;
         }
-        .cs-link {
-          color: var(--primary);
-          font-size: 14px;
-          letter-spacing: -0.224px;
-          margin-top: 6px;
+        .wk-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+        .wk-soon {
+          grid-column: 1 / -1;
+          text-align: center;
+          padding: 48px 24px;
+          background: rgba(255, 255, 255, 0.45);
+          border: 2px dashed rgba(255, 255, 255, 0.85);
+          border-radius: 22px;
         }
+        .wk-soon-mark { font-size: 28px; color: var(--accent); margin-bottom: 8px; }
+        .wk-soon h4 { font-family: var(--font-display); font-weight: 600; font-size: 22px; margin-bottom: 6px; }
+        .wk-soon p { font-size: 14px; color: var(--ink-soft); }
       `}</style>
-    </div>
-  );
-}
-
-function Meta({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <div style={{ fontSize: 12, fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.4, color: "var(--ink-muted-48)" }}>
-        {label}
-      </div>
-      <div style={{ marginTop: 4, fontSize: 17, fontWeight: 600, letterSpacing: -0.374 }}>
-        {value}
-      </div>
-    </div>
+    </PopupShell>
   );
 }
