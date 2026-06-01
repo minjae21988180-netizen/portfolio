@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useParallax } from "@/hooks/useParallax";
 
 /**
  * Entrance sequence for the landing page.
@@ -20,7 +21,12 @@ const ZOOM_MS = 1500;
 export default function IntroSequence({ onDone }: { onDone: () => void }) {
   const [phase, setPhase] = useState<"wide" | "enter">("wide");
   const charRef = useRef<HTMLDivElement>(null);
+  const wideRef = useRef<HTMLDivElement>(null);
   const doneRef = useRef(false);
+
+  // same cursor-parallax depth as the live site, on the wide loading frame.
+  // (Nested inside the dive-zoom wrapper so both transforms compose.)
+  useParallax(wideRef, { maxX: 42, maxY: 28, scale: 1.12 });
 
   // character hangs from the cursor (anchored at top, gentle lag via CSS)
   useEffect(() => {
@@ -78,9 +84,12 @@ export default function IntroSequence({ onDone }: { onDone: () => void }) {
         <img src="/assets/control-room.png" alt="" />
       </div>
 
-      {/* zoomed-out frame — scales up and fades as the camera flies in */}
+      {/* zoomed-out frame — has its own cursor-parallax (inner), and the
+          outer wrapper scales up / fades as the camera flies in */}
       <div className="intro-layer intro-wide" aria-hidden>
-        <img src="/assets/landing-wide.png" alt="" />
+        <div className="intro-wide-px" ref={wideRef}>
+          <img src="/assets/landing-wide.png" alt="" />
+        </div>
       </div>
 
       {/* character hanging from the cursor */}
@@ -121,6 +130,11 @@ export default function IntroSequence({ onDone }: { onDone: () => void }) {
           display: block;
           user-select: none;
           -webkit-user-drag: none;
+        }
+        .intro-wide-px {
+          position: absolute;
+          inset: 0;
+          will-change: transform;
         }
 
         /* wide frame on top to start */
