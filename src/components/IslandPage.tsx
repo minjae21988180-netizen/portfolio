@@ -26,7 +26,7 @@ export default function IslandPage({
 }) {
   const [open, setOpen] = useState(false);
   const sceneRef = useRef<HTMLDivElement>(null);
-  useParallax(sceneRef);
+  useParallax(sceneRef, { maxX: 58, maxY: 38, scale: 1.2 });
 
   useEffect(() => {
     if (!open) return;

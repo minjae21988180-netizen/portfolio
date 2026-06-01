@@ -17,17 +17,17 @@ const ZONES: { key: Exclude<Zone, null>; min: number; max: number; href: string;
 
 // Character sways subtly around center (not full-width tracking) so the
 // side windows stay clickable. Constants per PROJECT_BRIEF §1.
-const CHAR_TRAVEL = 75; // px, ±
-const CHAR_TILT = 5; // deg, ±
-const LERP = 0.06;
+const CHAR_TRAVEL = 95; // px, ±
+const CHAR_TILT = 6; // deg, ±
+const LERP = 0.07;
 
 export default function ControlCenter() {
   const sceneRef = useRef<HTMLDivElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
   const characterRef = useRef<HTMLElement>(null);
   const transitionRef = useRef<HTMLDivElement>(null);
-  // background panorama parallax (subtle; character moves more + opposite → depth)
-  useParallax(bgRef, { maxX: 22, maxY: 13, scale: 1.08 });
+  // background panorama parallax — dramatic; character moves opposite → depth
+  useParallax(bgRef, { maxX: 46, maxY: 30, scale: 1.16 });
   const router = useRouter();
   const [activeZone, setActiveZone] = useState<Zone>(null);
   const [isMobile, setIsMobile] = useState(false);
