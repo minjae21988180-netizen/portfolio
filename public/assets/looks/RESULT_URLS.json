@@ -2,15 +2,19 @@
   "model": "nano_banana_pro (returned id: nano_banana_2)",
   "aspect_ratio": "3:4",
   "resolution": "1k (896x1200)",
-  "reference_image": "https://raw.githubusercontent.com/minjae21988180-netizen/portfolio/4b70572dc104d6a81c170ed4f4fd78e3e16b68fd/public/assets/avatar_base_isolated.png",
+  "identity_reference": {
+    "note": "Round 2 (this manifest) uses the Sunlight render as the identity anchor. Round 1 used avatar_base_isolated.png and faces drifted.",
+    "job_id": "658900ed-b98b-42d6-9f82-a5ea9fad605d",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_32n5x2nNKC09sST8BXBSi3R8SlN/hf_20260601_052925_658900ed-b98b-42d6-9f82-a5ea9fad605d.png"
+  },
   "looks": [
-    { "id": "studio-day",     "name": "Studio Day",     "source": "base reference (already saved as studio-day.png)" },
-    { "id": "edm-night",      "name": "EDM Night",      "job_id": "c3ebd1f2-5d50-43d0-a0e1-0a89d0988919", "url": "https://d8j0ntlcm91z4.cloudfront.net/user_32n5x2nNKC09sST8BXBSi3R8SlN/hf_20260601_052918_c3ebd1f2-5d50-43d0-a0e1-0a89d0988919.png" },
-    { "id": "yoga-flow",      "name": "Yoga Flow",      "job_id": "bf84d80e-a6b3-495f-878b-42a30463d1ea", "url": "https://d8j0ntlcm91z4.cloudfront.net/user_32n5x2nNKC09sST8BXBSi3R8SlN/hf_20260601_052920_bf84d80e-a6b3-495f-878b-42a30463d1ea.png" },
-    { "id": "soulcycle",      "name": "SoulCycle",      "job_id": "8a30c855-ec4e-43b5-adf7-8eb4bb0654f2", "url": "https://d8j0ntlcm91z4.cloudfront.net/user_32n5x2nNKC09sST8BXBSi3R8SlN/hf_20260601_052923_8a30c855-ec4e-43b5-adf7-8eb4bb0654f2.png" },
-    { "id": "sunlight",       "name": "Sunlight",       "job_id": "658900ed-b98b-42d6-9f82-a5ea9fad605d", "url": "https://d8j0ntlcm91z4.cloudfront.net/user_32n5x2nNKC09sST8BXBSi3R8SlN/hf_20260601_052925_658900ed-b98b-42d6-9f82-a5ea9fad605d.png" },
-    { "id": "cafe",           "name": "Café Connect",   "job_id": "7da25f90-7691-497c-9bab-0a4e1d7a83e9", "url": "https://d8j0ntlcm91z4.cloudfront.net/user_32n5x2nNKC09sST8BXBSi3R8SlN/hf_20260601_052928_7da25f90-7691-497c-9bab-0a4e1d7a83e9.png" },
-    { "id": "designer-pitch", "name": "Designer Pitch", "job_id": "b3807ba7-13d1-40c2-af6f-68b12fb53c84", "url": "https://d8j0ntlcm91z4.cloudfront.net/user_32n5x2nNKC09sST8BXBSi3R8SlN/hf_20260601_052932_b3807ba7-13d1-40c2-af6f-68b12fb53c84.png" },
-    { "id": "weekend",        "name": "Weekend",        "job_id": "882e8e0e-fdd1-4c12-b2b6-f3165c610064", "url": "https://d8j0ntlcm91z4.cloudfront.net/user_32n5x2nNKC09sST8BXBSi3R8SlN/hf_20260601_052934_882e8e0e-fdd1-4c12-b2b6-f3165c610064.png" }
+    { "id": "studio-day",     "name": "Studio Day",     "source": "original base reference (already saved as studio-day.png)" },
+    { "id": "sunlight",       "name": "Sunlight",       "job_id": "658900ed-b98b-42d6-9f82-a5ea9fad605d", "url": "https://d8j0ntlcm91z4.cloudfront.net/user_32n5x2nNKC09sST8BXBSi3R8SlN/hf_20260601_052925_658900ed-b98b-42d6-9f82-a5ea9fad605d.png", "note": "This IS the new identity anchor. Round-1 sunlight, kept." },
+    { "id": "edm-night",      "name": "EDM Night",      "job_id": "2fd457ee-c0f6-42e4-9e9a-461224b5b8f3", "url": "https://d8j0ntlcm91z4.cloudfront.net/user_32n5x2nNKC09sST8BXBSi3R8SlN/hf_20260601_074015_2fd457ee-c0f6-42e4-9e9a-461224b5b8f3.png" },
+    { "id": "yoga-flow",      "name": "Yoga Flow",      "job_id": "f4a54b43-9432-4ee9-8ad9-b53bd09eaa54", "url": "https://d8j0ntlcm91z4.cloudfront.net/user_32n5x2nNKC09sST8BXBSi3R8SlN/hf_20260601_074018_f4a54b43-9432-4ee9-8ad9-b53bd09eaa54.png" },
+    { "id": "soulcycle",      "name": "SoulCycle",      "job_id": "7a7c45e1-2b7f-4076-a236-5d886bdbb047", "url": "https://d8j0ntlcm91z4.cloudfront.net/user_32n5x2nNKC09sST8BXBSi3R8SlN/hf_20260601_074022_7a7c45e1-2b7f-4076-a236-5d886bdbb047.png" },
+    { "id": "cafe",           "name": "Café Connect",   "job_id": "91ba6fc5-6df0-4bab-8eeb-0e87a8f204cc", "url": "https://d8j0ntlcm91z4.cloudfront.net/user_32n5x2nNKC09sST8BXBSi3R8SlN/hf_20260601_074026_91ba6fc5-6df0-4bab-8eeb-0e87a8f204cc.png" },
+    { "id": "designer-pitch", "name": "Designer Pitch", "job_id": "b91016f4-be69-4388-ab36-0619ab360c80", "url": "https://d8j0ntlcm91z4.cloudfront.net/user_32n5x2nNKC09sST8BXBSi3R8SlN/hf_20260601_074030_b91016f4-be69-4388-ab36-0619ab360c80.png" },
+    { "id": "weekend",        "name": "Weekend",        "job_id": "94817626-bf70-4346-9616-2d3e9b91e926", "url": "https://d8j0ntlcm91z4.cloudfront.net/user_32n5x2nNKC09sST8BXBSi3R8SlN/hf_20260601_074033_94817626-bf70-4346-9616-2d3e9b91e926.png" }
   ]
 }
