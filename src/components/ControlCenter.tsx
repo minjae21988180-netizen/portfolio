@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import ControlRoom from "./art/ControlRoom";
 import CharacterBack from "./art/CharacterBack";
 import MeOdometer from "./MeOdometer";
+import IntroSequence from "./IntroSequence";
 import { useParallax } from "@/hooks/useParallax";
 
 type Zone = "work" | "me" | "connect" | null;
@@ -34,6 +35,20 @@ export default function ControlCenter() {
   const [transitioning, setTransitioning] = useState(false);
   const [meoOpen, setMeoOpen] = useState(false);
   const [dancing, setDancing] = useState(false);
+  // null = undecided (render splash, no hydration mismatch); true/false after mount
+  const [intro, setIntro] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const seen = typeof window !== "undefined" && sessionStorage.getItem("cc-intro");
+    setIntro(!seen);
+  }, []);
+
+  const finishIntro = useCallback(() => {
+    try {
+      sessionStorage.setItem("cc-intro", "1");
+    } catch {}
+    setIntro(false);
+  }, []);
 
   const targetXRef = useRef(0.5);
   const currentXRef = useRef(0.5);
@@ -211,6 +226,10 @@ export default function ControlCenter() {
         </p>
       </div>
 
+      {/* Entrance: splash while undecided, then the zoom-in intro (once/session) */}
+      {intro === null && <div className="cc-splash" aria-hidden />}
+      {intro === true && <IntroSequence onDone={finishIntro} />}
+
       {/* ME-ODOMETER player-card popup */}
       {meoOpen && <MeOdometer onClose={() => setMeoOpen(false)} />}
 
@@ -234,6 +253,15 @@ export default function ControlCenter() {
           inset: 0;
           z-index: 0;
           will-change: transform;
+        }
+
+        /* covers the scene until the once-per-session intro decision is made,
+           so there's no flash of the room (and no hydration mismatch) */
+        .cc-splash {
+          position: fixed;
+          inset: 0;
+          z-index: 210;
+          background: linear-gradient(180deg, #2a1f3d, #3d2f5c 60%, #4a3a5c);
         }
 
         .cc-hero {
