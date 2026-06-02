@@ -13,7 +13,7 @@ const LOOKS: Look[] = [
   { id: "designer-pitch", name: "Designer Pitch", image: "/assets/looks/designer-pitch.png" },
   { id: "weekend",        name: "Weekend",        image: "/assets/looks/weekend.png" },
   { id: "concert",        name: "Concert",        image: "/assets/looks/concert.png" },
-  { id: "edm-night",      name: "EDM Night",      image: "" },
+  { id: "edm-night",      name: "EDM Night",      image: "/assets/looks/edm-night.png" },
 ];
 
 type Skill = { label: string; value: number; icon: IconName; bar: string };
