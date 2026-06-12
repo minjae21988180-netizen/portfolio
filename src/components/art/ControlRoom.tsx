@@ -78,7 +78,7 @@ export default function ControlRoom() {
       uDepth: { value: null as THREE.Texture | null },
       uMouse: { value: new THREE.Vector2(0, 0) },
       uCover: { value: new THREE.Vector2(1, 1) },
-      uStrength: { value: new THREE.Vector2(0.035, 0.02) },
+      uStrength: { value: new THREE.Vector2(0.016, 0.01) },
     };
     const material = new THREE.ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG, uniforms });
     scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material));
