@@ -1,0 +1,47 @@
+{
+  "purpose": "Multi-layer parallax (2.5D) landing scene — each layer moves at a different speed with the cursor.",
+  "model": "nano_banana_pro (nano_banana_2), 21:9, 1k (1584x672), reference-locked to control-room.png on main",
+  "compositing": "All layers share the same canvas and camera. Stack absolutely-positioned, full-bleed, in z-order below. Layer 4 (nearest) is the existing character sprite already driven by the cursor.",
+  "layers": [
+    {
+      "z": 1,
+      "id": "room-shell",
+      "file": "scene/01-room-shell.png",
+      "transparent": false,
+      "parallax_max_px": 6,
+      "job_id": "8ee12634-6522-4528-85cc-7924357d335f",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_32n5x2nNKC09sST8BXBSi3R8SlN/hf_20260612_022839_8ee12634-6522-4528-85cc-7924357d335f.png",
+      "contents": "Room interior with walls, three island windows, ceiling stars, floor glow — desk and props removed"
+    },
+    {
+      "z": 2,
+      "id": "console",
+      "file": "scene/02-console.png",
+      "transparent": true,
+      "parallax_max_px": 22,
+      "job_id": "ec385700-ddcd-47d4-a980-c23226d99cd6",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_32n5x2nNKC09sST8BXBSi3R8SlN/hf_20260612_022939_ec385700-ddcd-47d4-a980-c23226d99cd6.png",
+      "contents": "Console desk with screens, buttons, stickers — background removed (alpha PNG)",
+      "source_job_before_bg_removal": "24a3a15c-adeb-42e1-8ac8-c439e15b92a6"
+    },
+    {
+      "z": 3,
+      "id": "props",
+      "file": "scene/03-props.png",
+      "transparent": true,
+      "parallax_max_px": 40,
+      "job_id": "a172fde9-7559-4a47-8b07-d620b0ebcb5b",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_32n5x2nNKC09sST8BXBSi3R8SlN/hf_20260612_022940_a172fde9-7559-4a47-8b07-d620b0ebcb5b.png",
+      "contents": "Crystal orb, pampas vase, coffee mug — background removed (alpha PNG)",
+      "source_job_before_bg_removal": "f7f0c06e-875b-46c3-9e5c-ed30fd1589a3"
+    },
+    {
+      "z": 4,
+      "id": "character",
+      "file": "character-sprite.png (existing asset)",
+      "transparent": true,
+      "parallax_max_px": "cursor-driven (existing behavior)",
+      "contents": "Chibi character back view — already a separate sprite, no generation needed"
+    }
+  ]
+}
