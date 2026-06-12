@@ -1,0 +1,20 @@
+{
+  "model": "nano_banana_pro (returned id: nano_banana_2)",
+  "aspect_ratio": "3:4",
+  "resolution": "1k (896x1200)",
+  "identity_reference": {
+    "note": "Round 2 (this manifest) uses the Sunlight render as the identity anchor. Round 1 used avatar_base_isolated.png and faces drifted.",
+    "job_id": "658900ed-b98b-42d6-9f82-a5ea9fad605d",
+    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_32n5x2nNKC09sST8BXBSi3R8SlN/hf_20260601_052925_658900ed-b98b-42d6-9f82-a5ea9fad605d.png"
+  },
+  "looks": [
+    { "id": "studio-day",     "name": "Studio Day",     "source": "original base reference (already saved as studio-day.png)" },
+    { "id": "sunlight",       "name": "Sunlight",       "job_id": "658900ed-b98b-42d6-9f82-a5ea9fad605d", "url": "https://d8j0ntlcm91z4.cloudfront.net/user_32n5x2nNKC09sST8BXBSi3R8SlN/hf_20260601_052925_658900ed-b98b-42d6-9f82-a5ea9fad605d.png", "note": "This IS the new identity anchor. Round-1 sunlight, kept." },
+    { "id": "edm-night",      "name": "EDM Night",      "job_id": "a9e98e1a-f29b-4076-9a6a-16b22e97722a", "url": "https://d8j0ntlcm91z4.cloudfront.net/user_32n5x2nNKC09sST8BXBSi3R8SlN/hf_20260601_074400_a9e98e1a-f29b-4076-9a6a-16b22e97722a.png", "note": "Outfit updated to match user-supplied festival photo: white graphic tee, sheer black lace maxi skirt with side slit, chunky black combat platform boots, lime-green crossbody bag, dark sunglasses, gold pendant, beaded bracelets. Hair kept as messy high bun." },
+    { "id": "yoga-flow",      "name": "Yoga Flow",      "job_id": "f4a54b43-9432-4ee9-8ad9-b53bd09eaa54", "url": "https://d8j0ntlcm91z4.cloudfront.net/user_32n5x2nNKC09sST8BXBSi3R8SlN/hf_20260601_074018_f4a54b43-9432-4ee9-8ad9-b53bd09eaa54.png" },
+    { "id": "soulcycle",      "name": "SoulCycle",      "job_id": "7a7c45e1-2b7f-4076-a236-5d886bdbb047", "url": "https://d8j0ntlcm91z4.cloudfront.net/user_32n5x2nNKC09sST8BXBSi3R8SlN/hf_20260601_074022_7a7c45e1-2b7f-4076-a236-5d886bdbb047.png" },
+    { "id": "cafe",           "name": "Café Connect",   "job_id": "91ba6fc5-6df0-4bab-8eeb-0e87a8f204cc", "url": "https://d8j0ntlcm91z4.cloudfront.net/user_32n5x2nNKC09sST8BXBSi3R8SlN/hf_20260601_074026_91ba6fc5-6df0-4bab-8eeb-0e87a8f204cc.png" },
+    { "id": "designer-pitch", "name": "Designer Pitch", "job_id": "b91016f4-be69-4388-ab36-0619ab360c80", "url": "https://d8j0ntlcm91z4.cloudfront.net/user_32n5x2nNKC09sST8BXBSi3R8SlN/hf_20260601_074030_b91016f4-be69-4388-ab36-0619ab360c80.png" },
+    { "id": "weekend",        "name": "Weekend",        "job_id": "94817626-bf70-4346-9616-2d3e9b91e926", "url": "https://d8j0ntlcm91z4.cloudfront.net/user_32n5x2nNKC09sST8BXBSi3R8SlN/hf_20260601_074033_94817626-bf70-4346-9616-2d3e9b91e926.png" }
+  ]
+}
