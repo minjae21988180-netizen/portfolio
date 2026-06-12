@@ -120,7 +120,12 @@ export default function ControlRoom() {
     Promise.all([loader.loadAsync(COLOR_URL), loader.loadAsync(DEPTH_URL)])
       .then(([color, depth]) => {
         if (disposed) return;
-        color.colorSpace = THREE.SRGBColorSpace;
+        // NoColorSpace: the shader is a pure passthrough (no lighting math),
+        // so skip the sRGB→linear decode entirely — pixels reach the screen
+        // exactly as they exist in the PNG. Tagging this sRGB makes the GPU
+        // decode to linear and our raw ShaderMaterial never re-encodes,
+        // which rendered the whole room gamma-darkened.
+        color.colorSpace = THREE.NoColorSpace;
         color.minFilter = THREE.LinearFilter;
         depth.minFilter = THREE.LinearFilter;
         imgAspect = color.image.width / color.image.height;
