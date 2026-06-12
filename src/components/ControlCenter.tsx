@@ -46,24 +46,12 @@ export default function ControlCenter() {
     return null;
   }, []);
 
-  // animation loop
+  // Zone detection follows the cursor directly — the character no longer
+  // walks toward the windows (she stands in the room as the resident).
   useEffect(() => {
-    if (isMobile) {
-      currentXRef.current = 0.5;
-      if (characterRef.current) {
-        characterRef.current.style.left = `50%`;
-      }
-      return;
-    }
-
+    if (isMobile) return;
     const tick = () => {
-      // lerp current → target
-      currentXRef.current += (targetXRef.current - currentXRef.current) * 0.09;
-      const x = currentXRef.current;
-      if (characterRef.current) {
-        characterRef.current.style.left = `${x * 100}%`;
-      }
-      const z = detectZone(x);
+      const z = detectZone(targetXRef.current);
       if (z !== activeZoneRef.current) {
         activeZoneRef.current = z;
         setActiveZone(z);

@@ -2,36 +2,74 @@
 
 import { useEffect, useRef } from "react";
 
+/**
+ * Magical cursor: a glowing core + a lagging halo + a sparkle trail.
+ * - core and halo use mix-blend-mode: screen so they bloom over dark scenes
+ * - sparkles are spawned imperatively, animate via CSS, and self-destruct on
+ *   animationend so we never re-render React for trail particles
+ */
 export default function CustomCursor() {
-  const dotRef = useRef<HTMLDivElement>(null);
-  const ringRef = useRef<HTMLDivElement>(null);
+  const coreRef = useRef<HTMLDivElement>(null);
+  const haloRef = useRef<HTMLDivElement>(null);
+  const trailRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (window.matchMedia("(hover: none), (pointer: coarse)").matches) return;
 
-    let dotX = window.innerWidth / 2;
-    let dotY = window.innerHeight / 2;
-    let ringX = dotX;
-    let ringY = dotY;
+    let coreX = window.innerWidth / 2;
+    let coreY = window.innerHeight / 2;
+    let haloX = coreX;
+    let haloY = coreY;
+    let lastSpark = 0;
+    let lastMove = 0;
     let raf = 0;
 
     const onMove = (e: MouseEvent) => {
-      dotX = e.clientX;
-      dotY = e.clientY;
+      coreX = e.clientX;
+      coreY = e.clientY;
+      lastMove = performance.now();
+    };
+
+    const spawnSparkle = (x: number, y: number) => {
+      const trail = trailRef.current;
+      if (!trail) return;
+      const s = document.createElement("span");
+      s.className = "cursor-spark";
+      const dx = (Math.random() - 0.5) * 40; // small horizontal drift
+      const dy = -20 - Math.random() * 30;   // float up
+      const r = (Math.random() - 0.5) * 90;  // small rotation
+      s.style.left = `${x + (Math.random() - 0.5) * 14}px`;
+      s.style.top = `${y + (Math.random() - 0.5) * 14}px`;
+      s.style.setProperty("--dx", `${dx}px`);
+      s.style.setProperty("--dy", `${dy}px`);
+      s.style.setProperty("--r", `${r}deg`);
+      s.style.setProperty("--size", `${5 + Math.random() * 5}px`);
+      s.addEventListener("animationend", () => s.remove(), { once: true });
+      trail.appendChild(s);
     };
 
     const tick = () => {
-      ringX += (dotX - ringX) * 0.18;
-      ringY += (dotY - ringY) * 0.18;
-      if (dotRef.current) {
-        dotRef.current.style.left = `${dotX}px`;
-        dotRef.current.style.top = `${dotY}px`;
+      haloX += (coreX - haloX) * 0.16;
+      haloY += (coreY - haloY) * 0.16;
+
+      if (coreRef.current) {
+        coreRef.current.style.left = `${coreX}px`;
+        coreRef.current.style.top = `${coreY}px`;
       }
-      if (ringRef.current) {
-        ringRef.current.style.left = `${ringX}px`;
-        ringRef.current.style.top = `${ringY}px`;
+      if (haloRef.current) {
+        haloRef.current.style.left = `${haloX}px`;
+        haloRef.current.style.top = `${haloY}px`;
       }
+
+      // emit sparkles only while the cursor is moving — quiet when idle
+      const now = performance.now();
+      const moving = now - lastMove < 120;
+      if (moving && now - lastSpark > 35) {
+        spawnSparkle(coreX, coreY);
+        lastSpark = now;
+      }
+
       raf = requestAnimationFrame(tick);
     };
 
@@ -45,8 +83,9 @@ export default function CustomCursor() {
 
   return (
     <>
-      <div className="cursor-ring" ref={ringRef} aria-hidden />
-      <div className="cursor-dot" ref={dotRef} aria-hidden />
+      <div className="cursor-halo" ref={haloRef} aria-hidden />
+      <div className="cursor-core" ref={coreRef} aria-hidden />
+      <div className="cursor-trail" ref={trailRef} aria-hidden />
     </>
   );
 }

@@ -427,37 +427,72 @@ button {
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* -------- Custom cursor — single Action Blue dot -------- */
-.cursor-dot {
+/* -------- Magical cursor: glowing core + halo + sparkle trail -------- */
+.cursor-core {
   position: fixed;
-  width: 8px;
-  height: 8px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
-  background: var(--primary);
+  background: radial-gradient(circle, #fff 0%, #FFE4B0 35%, rgba(255, 200, 140, 0) 75%);
+  filter: blur(0.4px) drop-shadow(0 0 8px rgba(255, 210, 140, 0.9));
   pointer-events: none;
   transform: translate(-50%, -50%);
-  z-index: 1000;
-  transition: width 0.18s, height 0.18s, opacity 0.18s;
+  mix-blend-mode: screen;
+  z-index: 1001;
   top: 0;
   left: 0;
 }
-.cursor-ring {
+.cursor-halo {
   position: fixed;
-  width: 36px;
-  height: 36px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
-  border: 1.5px solid rgba(0, 102, 204, 0.45);
+  background: radial-gradient(circle, rgba(255, 200, 140, 0.55) 0%, rgba(245, 160, 184, 0.25) 45%, rgba(232, 196, 240, 0) 75%);
   pointer-events: none;
   transform: translate(-50%, -50%);
+  mix-blend-mode: screen;
   z-index: 1000;
   top: 0;
   left: 0;
+  animation: cursorHaloPulse 2.4s ease-in-out infinite;
 }
-.cursor-on-dark .cursor-dot { background: var(--primary-on-dark); }
-.cursor-on-dark .cursor-ring { border-color: rgba(41, 151, 255, 0.5); }
+.cursor-trail {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1000;
+  overflow: hidden;
+}
+.cursor-spark {
+  position: absolute;
+  width: var(--size, 6px);
+  height: var(--size, 6px);
+  background:
+    radial-gradient(circle, #fff 0%, #FFE4B0 30%, rgba(255, 200, 140, 0) 70%);
+  border-radius: 50%;
+  filter: drop-shadow(0 0 6px rgba(255, 210, 140, 0.95));
+  mix-blend-mode: screen;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  animation: cursorSpark 1.1s ease-out forwards;
+}
+@keyframes cursorHaloPulse {
+  0%, 100% { opacity: 0.85; transform: translate(-50%, -50%) scale(1); }
+  50%      { opacity: 1;    transform: translate(-50%, -50%) scale(1.12); }
+}
+@keyframes cursorSpark {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.4) rotate(0deg); }
+  20%  { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(calc(var(--r) * 0.4)); }
+  100% {
+    opacity: 0;
+    transform:
+      translate(calc(-50% + var(--dx)), calc(-50% + var(--dy)))
+      scale(0.2) rotate(var(--r));
+  }
+}
 
 @media (hover: none), (pointer: coarse) {
-  .cursor-dot, .cursor-ring { display: none; }
+  .cursor-core, .cursor-halo, .cursor-trail { display: none; }
 }
 
 /* -------- Scene-specific helpers (used only in landing) -------- */
