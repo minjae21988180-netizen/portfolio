@@ -67,6 +67,7 @@ export default function ControlRoom() {
     let renderer: THREE.WebGLRenderer;
     try {
       renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false });
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
     } catch {
       return; // WebGL unavailable → stay on the still image
     }
